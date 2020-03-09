@@ -12,7 +12,13 @@ variable "port" {
 
 
 locals {
-  environment = flatten([for k, v in merge(var.env_map, { PORT = var.port }) : { name = k, value = v }])
+  environment = [for k, v in merge(var.env_map, { PORT = "${var.port}" }) : { name = k, value = "${v}" }]
+
+  e2 = [
+    { name = "FOO", value = "bar" },
+    { name = "PORT", value = var.port }
+
+  ]
 }
 
 output "out" {
@@ -21,4 +27,15 @@ output "out" {
 
 output "out_yaml" {
   value = yamlencode({ env = local.environment})
+}
+
+
+output "out2" {
+  value = local.e2
+}
+
+
+
+output "out2_yaml" {
+  value = yamlencode({ env = local.e2})
 }
